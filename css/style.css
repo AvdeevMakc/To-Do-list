@@ -1,0 +1,112 @@
+body{
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 18px;
+    height: 100%;
+    background: #066acd;
+    
+}
+
+.wrapper{
+    display: flex;
+    flex-direction: column;
+    width: 800px;
+    margin: 30px auto;
+    background: white;
+    border-radius: 10px;
+    min-width: 450px;
+    min-height: 100px;
+}
+
+h1{
+    font-size: 36px;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.input-panel{
+    padding: 30px 20px;
+}
+.input-panel p{
+    font-size: 14px;
+}
+
+.input-panel-block {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom:10px;
+} 
+
+.input-panel-block input{
+    width: 75%;
+    height: 45px;
+    padding: 12px;
+    color: #111111;
+    font-weight: 500;
+    position: relative;
+    border-radius: 5px;
+    font-family: 'Poppins',sans-serif;
+    font-size: 15px;
+    border: 2px solid #d1d3d4;
+}
+
+.input-panel-block input:focus{
+    outline: none;
+    border-color: #0d75ec;
+}
+
+button{
+    font-size: 16px;
+
+    padding: 3px;
+    background-color: #0d75ec;
+    color: #ffffff;
+    height: 45px;
+    border-radius: 5px;
+    font-family: 'Poppins',sans-serif;
+}
+.input-panel-block button{
+    margin-left: 10px;
+}
+
+.input-panel-block button:hover{
+    box-shadow: 1px 0px 38px -11px rgba(13,117,236,1);
+    -webkit-box-shadow: 1px 0px 38px -11px rgba(13,117,236,1);
+    -moz-box-shadow: 1px 0px 38px -11px rgba(13,117,236,1);
+}
+
+/* ----------------TO-DO-LIST--------------------------------- */
+
+.to-do-list {
+    padding: 15px 20px;
+}
+.new-task {
+    /* border: 1px solid green; */
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    height: 45px;
+    background: #c4ebec;
+    border-radius: 10px;
+}
+
+.new-task-checked {
+    background: #6db786;
+    text-decoration:line-through;
+}
+
+.new-task input{
+    margin-left: 5px;
+    
+}
+
+.new-task p{
+    flex: 1 1 auto;
+    margin-left: 10px;
+}
+
+.new-task img{
+    width: 40px;
+    background: #0d75ec;
+    border-radius: 25%;
+    margin-right: 5px;
+}
