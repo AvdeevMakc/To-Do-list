@@ -2,54 +2,95 @@ let addTaskBtn = document.querySelector("#add-task-btn");
 let writeTaskInput = document.querySelector("#write-task-input");
 let firstMessage = document.querySelector("#first-message");
 let toDoList = document.querySelector(".to-do-list");
-let delTaskBtn = document.querySelector("#del-task-btn");
+let selectionBtn = document.querySelector("#showSelection");
 let delAllTasksBtn = document.querySelector("#del-all-tasks-btn");
 let delCheckTaskBtn = document.querySelector("#del-check-task-btn");
+
+let arrayTasks = [];
 
 addTaskBtn.addEventListener("click", addTaskHandler);
 writeTaskInput.addEventListener("keydown", function(e){
     if(e.code == "Enter" || e.code == "NumpadEnter") addTaskHandler();
 });
 
-delCheckTaskBtn.addEventListener("click", function(){
-    let allChecket = document.querySelectorAll("input[type=checkbox]");
-    for(const elem of allChecket){
-        if(elem.checked){
-            elem.parentElement.remove();
-        }
+// сортировка
+selectionBtn.addEventListener("change", function(){
+    switch(selectionBtn.selectedIndex){
+        case 0:
+            showAllTasks();
+            console.log("show all");
+            break;
+        case 1:
+            console.log("show check");
+            showCheckedArray();
+            break;
+        case 2:
+            showNoCheckedArray();
+            console.log("show no check");
     }
-    returmMessange();
-});
-
-
-// удалить все задачи
-delAllTasksBtn.addEventListener("click", function(){
-    while(toDoList.firstChild){
-        toDoList.removeChild(toDoList.firstChild);
-    }
-    firstMessage.hidden = false; // вернуть сообщение
-    writeTaskInput.focus(); // вернуть фокус после удаления
 })
 
-function returmMessange(){
-    if(toDoList.childNodes.length === 1){
-        firstMessage.hidden = false; // вернуть сообщение
-        writeTaskInput.focus(); // вернуть фокус после удаления
-    }
+function showAllTasks(){            
+    clearDisplay();      // удаляем все задания
+    if(!firstMessage.hidden) firstMessage.hidden = true; // установка текста про задачи
+
+    for(let i = 0; i < arrayTasks.length; i++) {
+        let task = arrayTasks[i];
+        let newTask = createNewTask(task.text, task.done);
+        toDoList.append(newTask);
+    }        
+
+writeTaskInput.value = "";
 }
 
-// удалить текущую задачу
-function delTask(){
-    this.parentElement.remove();
-    returmMessange();
+// показать выделенные 
+function showCheckedArray(){            
+        clearDisplay();      // удаляем все задания
+        if(!firstMessage.hidden) firstMessage.hidden = true; // установка текста про задачи
+
+        for(let i = 0; i < arrayTasks.length; i++) {
+            let task = arrayTasks[i];
+            if(task.done){
+                let newTask = createNewTask(task.text, task.done);
+                toDoList.append(newTask);
+            }
+        }        
+
+    writeTaskInput.value = "";
 }
 
+// показать не выделенные
+function showNoCheckedArray(){            
+    clearDisplay();      // удаляем все задания
+    if(!firstMessage.hidden) firstMessage.hidden = true; // установка текста про задачи
+
+    for(let i = 0; i < arrayTasks.length; i++) {
+        let task = arrayTasks[i];
+        if(!task.done){
+            let newTask = createNewTask(task.text, task.done);
+            toDoList.append(newTask);
+        }
+    }        
+
+writeTaskInput.value = "";
+}
+
+
+//добавление новой записи в разметку 
 function addTaskHandler(){
     if(writeTaskInput.value){
-        if(!firstMessage.hidden) firstMessage.hidden = true;
+        
+        clearDisplay();      // удаляем все задания
+        if(!firstMessage.hidden) firstMessage.hidden = true; // установка текста про задачи
+       
+        addTaskToArray();   // добавляем в массив введенное значение
 
-        let newTask = createNewTask(writeTaskInput.value);
-        toDoList.append(newTask);
+        for(let i = 0; i < arrayTasks.length; i++) {
+            let task = arrayTasks[i];
+            let newTask = createNewTask(task.text, task.done);
+            toDoList.append(newTask);
+        }
+        
 
     writeTaskInput.value = "";
     }else {
@@ -57,35 +98,136 @@ function addTaskHandler(){
     }
 }
 
-function changeTaskState(){
-    if(this.checked){
-        this.parentElement.classList.add("new-task-checked");
-    } else {
-        this.parentElement.classList.remove("new-task-checked");
+// добавить в массив запись
+function addTaskToArray(){
+    let elem = {
+        text: writeTaskInput.value,
+        done: false
+    }
+    arrayTasks.push(elem);
+    console.log(arrayTasks);
+}
+
+// изменить задачу
+function renameTask(){
+    let newTask = prompt("Enter new task");
+    let elem = this.previousSibling; // находим Р через соседний элемент
+
+    for(let i = 0; i < arrayTasks.length; i++){
+        let task = arrayTasks[i];
+
+        if(task.text === elem.textContent){
+            arrayTasks[i].text = newTask;
+        }
+    }
+
+    this.previousSibling.textContent = newTask;
+}
+
+// создание разметки 
+function createNewTask(text, value){    
+
+        let div = document.createElement("div");
+        div.classList.add("new-task");
+
+        let input = document.createElement("input");
+        input.addEventListener("click", changeTaskState);
+        input.type = "checkbox";
+        input.checked = value;
+
+        let p = document.createElement("p");
+        p.textContent = text;
+
+        let imgPrint = document.createElement("img");
+        imgPrint.src = "./image/print.png";
+        imgPrint.alt = "print";
+        imgPrint.id = "renameBtn";
+        imgPrint.addEventListener("click", renameTask);
+
+        let imgBin = document.createElement("img");
+        imgBin.src = "./image/bin.png";
+        imgBin.alt = "bin";
+        imgBin.id = "del-task-btn";
+        imgBin.addEventListener("click", delTask);
+
+        div.append(input);
+        div.append(p);
+        div.append(imgPrint);
+        div.append(imgBin);
+
+        if(input.checked){
+            div.classList.add("new-task-checked");  
+        } 
+
+        return div;
+}
+
+// удалить все задачи
+delAllTasksBtn.addEventListener("click", dellAllList);
+function dellAllList(){
+    clearDisplay();
+    arrayTasks.splice(0, arrayTasks.length); // очистить массив
+}
+
+// удалить текущую задачу
+function delTask(){
+    this.parentElement.remove();
+    let elem = this.previousSibling.previousSibling; // находим Р через соседний элемент, на котором было событие
+
+    for(let i = 0; i < arrayTasks.length; i++){
+        let task = arrayTasks[i];
+
+        if(task.text === elem.textContent){
+            arrayTasks.splice(i, 1);
+        }
+    }
+    returmMessange();
+}
+
+// если список пусть, вернули текст
+function returmMessange(){
+    if(toDoList.childNodes.length === 0){
+        firstMessage.hidden = false; // вернуть сообщение
+        writeTaskInput.focus(); // вернуть фокус после удаления
     }
 }
 
-function createNewTask(text){
-    let div = document.createElement("div");
-    div.classList.add("new-task");
+// очистить список на экране
+function clearDisplay(){
+    while(toDoList.firstChild){
+        toDoList.removeChild(toDoList.firstChild);
+    }
+    firstMessage.hidden = false; // вернуть сообщение
+    writeTaskInput.focus(); // вернуть фокус после удаления
+}
 
-    let input = document.createElement("input");
-    input.addEventListener("click", changeTaskState);
-    input.type = "checkbox";
+// добавить класс к выбранному DIV
+function changeTaskState(){
+    if(this.checked){
+        this.parentElement.classList.add("new-task-checked");
+        console.log(this);
 
-    let p = document.createElement("p");
-    p.textContent = text;
+        let elem = this.nextSibling; // находим Р через соседний элемент
 
-    let img = document.createElement("img");
-    img.src = "./image/bin.png";
-    img.alt = "bin";
-    img.id = "del-task-btn";
-    img.addEventListener("click", delTask);
+        for(let i = 0; i < arrayTasks.length; i++){
+            let task = arrayTasks[i];
 
+            if(task.text === elem.textContent){
+                arrayTasks[i].done = true;
+            }
+        }
 
-    div.append(input);
-    div.append(p);
-    div.append(img);
+    } else {
+        this.parentElement.classList.remove("new-task-checked");
 
-    return div;
+        let elem = this.nextSibling; // находим Р через соседний элемент
+
+        for(let i = 0; i < arrayTasks.length; i++){
+            let task = arrayTasks[i];
+
+            if(task.text === elem.textContent){
+                arrayTasks[i].done = false;
+            }
+        }
+    }
 }

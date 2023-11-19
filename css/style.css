@@ -37,7 +37,7 @@ h1{
 } 
 
 .input-panel-block input{
-    width: 75%;
+    width: 50%;
     height: 45px;
     padding: 12px;
     color: #111111;
@@ -55,17 +55,26 @@ h1{
 }
 
 button{
-    font-size: 16px;
+    font-size: 14px;
 
-    padding: 3px;
+    padding: 10px;
     background-color: #0d75ec;
     color: #ffffff;
     height: 45px;
     border-radius: 5px;
-    font-family: 'Poppins',sans-serif;
+    margin: 0 5px;
+}
+
+.input-panel-block select{
+    font-size: 14px;
+
+    padding: 10px;
+    background-color: #0d75ec;
+    color: #ffffff;
+    height: 45px;
+    border-radius: 5px;
 }
 .input-panel-block button{
-    margin-left: 10px;
 }
 
 .input-panel-block button:hover{
